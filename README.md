@@ -1,15 +1,15 @@
-# 🎨 Color Clock - Dynamic React Time Display
+# 🎨 Color Clock - African Timezone Calendar
 
-A beautiful, animated digital clock built with React and Vite, featuring stunning gradients and modern design.
+A calm, calendar-style time display built with React and Vite, showing major African time zones with a customizable accent theme.
 
 ## ✨ Features
 
-- Real-time date and time display
-- Animated gradient background
-- Glass morphism design
-- Responsive layout
-- Neon glow effects
-- Built with date-fns for reliable date formatting
+- Local time header with full date
+- Five African time zones shown in a single row
+- 12h / 24h time toggle
+- Custom accent picker with presets and modal UI
+- Accent-tinted background gradient
+- Responsive layout with Ubuntu typography
 
 ## 🚀 Installation
 ```bash
@@ -28,8 +28,8 @@ npm run dev
 
 - React 18
 - Vite
-- date-fns 2.30.0
-- CSS3 Animations
+- Intl.DateTimeFormat
+- CSS3
 
 ## 📸 Screenshot
 
@@ -37,10 +37,7 @@ npm run dev
 
 ## 🎯 How It Works
 
-The clock uses React's rendering with `date-fns` to format the current date and time. The display updates whenever the component renders, showing:
-- Full day name
-- Complete date
-- Time with seconds and AM/PM
+The app renders a local time summary plus five African time zone cards. Times update every second using a React interval. Formatting uses `Intl.DateTimeFormat` for each zone, with a toggle to switch 12h/24h output. The accent color picker updates the UI theme and background gradient in real time.
 
 ## 💻 Development
 ```bash
@@ -62,9 +59,9 @@ color-clock/
 
 ## 🎨 Color Palette
 
-- Primary: Purple/Pink Gradient (#667eea → #764ba2 → #f093fb)
-- Accent: Gold (#ffd700)
-- Text: White with shadow effects
+- Primary: Soft neutral gradient (accent-tinted)
+- Accent: User-selected via custom picker and presets
+- Text: Charcoal with muted supporting tones
 
 ---
 
