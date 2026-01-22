@@ -376,6 +376,9 @@
   gap: 12px;
   padding: 16px 18px;
   border-bottom: 1px solid #e5e9f2;
+  cursor: move;
+  user-select: none;
+  touch-action: none;
 }
 
 .modal-title {

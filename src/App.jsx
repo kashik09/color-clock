@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
 
 const TIME_ZONES = [
@@ -197,6 +197,15 @@ function App() {
   const [hexInput, setHexInput] = useState(DEFAULT_ACCENT)
   const [use24Hour, setUse24Hour] = useState(false)
   const [isPickerOpen, setIsPickerOpen] = useState(false)
+  const [modalOffset, setModalOffset] = useState({ x: 0, y: 0 })
+  const modalRef = useRef(null)
+  const dragState = useRef({
+    dragging: false,
+    startX: 0,
+    startY: 0,
+    originX: 0,
+    originY: 0,
+  })
 
   // Update time every second
   useEffect(() => {
@@ -286,6 +295,56 @@ function App() {
     }
   }
 
+  const openPicker = () => {
+    setModalOffset({ x: 0, y: 0 })
+    setIsPickerOpen(true)
+  }
+
+  const closePicker = () => {
+    setIsPickerOpen(false)
+    dragState.current.dragging = false
+  }
+
+  const clampOffset = (x, y) => {
+    const modal = modalRef.current
+    if (!modal) return { x, y }
+    const rect = modal.getBoundingClientRect()
+    const margin = 16
+    const baseLeft = (window.innerWidth - rect.width) / 2
+    const baseTop = (window.innerHeight - rect.height) / 2
+    const minX = margin - baseLeft
+    const maxX = window.innerWidth - margin - rect.width - baseLeft
+    const minY = margin - baseTop
+    const maxY = window.innerHeight - margin - rect.height - baseTop
+    return {
+      x: clamp(x, minX, maxX),
+      y: clamp(y, minY, maxY),
+    }
+  }
+
+  const handleModalPointerDown = (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return
+    event.currentTarget.setPointerCapture(event.pointerId)
+    dragState.current = {
+      dragging: true,
+      startX: event.clientX,
+      startY: event.clientY,
+      originX: modalOffset.x,
+      originY: modalOffset.y,
+    }
+  }
+
+  const handleModalPointerMove = (event) => {
+    if (!dragState.current.dragging) return
+    const nextX = dragState.current.originX + event.clientX - dragState.current.startX
+    const nextY = dragState.current.originY + event.clientY - dragState.current.startY
+    setModalOffset(clampOffset(nextX, nextY))
+  }
+
+  const handleModalPointerUp = () => {
+    dragState.current.dragging = false
+  }
+
   const localParts = getCalendarParts(currentTime)
   const localTime = getTimeString(currentTime, null, use24Hour)
 
@@ -332,7 +391,7 @@ function App() {
               <button
                 type="button"
                 className="accent-button"
-                onClick={() => setIsPickerOpen(true)}
+                onClick={openPicker}
               >
                 <span
                   className="accent-dot"
@@ -368,18 +427,25 @@ function App() {
         <div className="clock-subtitle">Made with React</div>
       </div>
       {isPickerOpen ? (
-        <div
-          className="modal-backdrop"
-          onClick={() => setIsPickerOpen(false)}
-        >
+        <div className="modal-backdrop" onClick={closePicker}>
           <div
             className="modal-card color-modal"
             role="dialog"
             aria-modal="true"
             aria-label="Accent color picker"
             onClick={(event) => event.stopPropagation()}
+            style={{
+              transform: `translate(${modalOffset.x}px, ${modalOffset.y}px)`,
+            }}
+            ref={modalRef}
           >
-            <div className="modal-header">
+            <div
+              className="modal-header"
+              onPointerDown={handleModalPointerDown}
+              onPointerMove={handleModalPointerMove}
+              onPointerUp={handleModalPointerUp}
+              onPointerCancel={handleModalPointerUp}
+            >
               <div>
                 <div className="modal-title">Accent color</div>
                 <div className="modal-subtitle">
@@ -389,7 +455,7 @@ function App() {
               <button
                 type="button"
                 className="modal-close"
-                onClick={() => setIsPickerOpen(false)}
+                onClick={closePicker}
               >
                 Close
               </button>
@@ -473,7 +539,7 @@ function App() {
               <button
                 type="button"
                 className="modal-done"
-                onClick={() => setIsPickerOpen(false)}
+                onClick={closePicker}
               >
                 Done
               </button>
