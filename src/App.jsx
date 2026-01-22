@@ -90,7 +90,6 @@ function App() {
   // State to hold current time
   const [currentTime, setCurrentTime] = useState(new Date())
   const [accentColor, setAccentColor] = useState('#5b7c99')
-  const [selectedZone, setSelectedZone] = useState(TIME_ZONES[0].id)
   const [use24Hour, setUse24Hour] = useState(false)
 
   // Update time every second
@@ -103,92 +102,94 @@ function App() {
     return () => clearInterval(timer)
   }, [])
 
-  const { month, year, day, weekday } = getCalendarParts(
-    currentTime,
-    selectedZone
-  )
-  const time = getTimeString(currentTime, selectedZone, use24Hour)
-
   return (
     <div className="clock-container" style={buildAccentStyles(accentColor)}>
-      <div className="calendar-card">
-        <div className="calendar-header">
-          <div className="calendar-month">{month}</div>
-          <div className="calendar-year">{year}</div>
+      <div className="clock-shell">
+        <div className="controls-card">
+          <div className="clock-controls">
+            <div className="format-controls">
+              <span className="format-label">Time format</span>
+              <div
+                className="format-toggle"
+                role="group"
+                aria-label="Time format"
+              >
+                <button
+                  type="button"
+                  className={!use24Hour ? 'is-active' : ''}
+                  onClick={() => setUse24Hour(false)}
+                  aria-pressed={!use24Hour}
+                >
+                  12h
+                </button>
+                <button
+                  type="button"
+                  className={use24Hour ? 'is-active' : ''}
+                  onClick={() => setUse24Hour(true)}
+                  aria-pressed={use24Hour}
+                >
+                  24h
+                </button>
+              </div>
+            </div>
+            <div className="color-controls">
+              <label className="color-label" htmlFor="accent-color">
+                Accent
+              </label>
+              <div className="color-picker">
+                <input
+                  id="accent-color"
+                  type="color"
+                  value={accentColor}
+                  onChange={(event) => setAccentColor(event.target.value)}
+                  aria-label="Choose accent color"
+                />
+                <span className="color-value">{accentColor.toUpperCase()}</span>
+              </div>
+              <div
+                className="color-presets"
+                role="group"
+                aria-label="Preset accents"
+              >
+                {ACCENT_PRESETS.map((preset) => {
+                  const isActive =
+                    preset.value.toLowerCase() === accentColor.toLowerCase()
+                  return (
+                    <button
+                      key={preset.value}
+                      type="button"
+                      className={`color-swatch${isActive ? ' is-active' : ''}`}
+                      style={{ backgroundColor: preset.value }}
+                      onClick={() => setAccentColor(preset.value)}
+                      title={preset.label}
+                      aria-label={preset.label}
+                    />
+                  )
+                })}
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="calendar-day">{day}</div>
-        <div className="calendar-weekday">{weekday}</div>
-        <div className="calendar-time">{time}</div>
-        <div className="calendar-controls">
-          <div className="timezone-controls">
-            <label className="timezone-label" htmlFor="timezone-select">
-              Time zone
-            </label>
-            <select
-              id="timezone-select"
-              value={selectedZone}
-              onChange={(event) => setSelectedZone(event.target.value)}
-            >
-              {TIME_ZONES.map((zone) => (
-                <option key={zone.id} value={zone.id}>
-                  {zone.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="format-controls">
-            <span className="format-label">Time format</span>
-            <div className="format-toggle" role="group" aria-label="Time format">
-              <button
-                type="button"
-                className={!use24Hour ? 'is-active' : ''}
-                onClick={() => setUse24Hour(false)}
-                aria-pressed={!use24Hour}
-              >
-                12h
-              </button>
-              <button
-                type="button"
-                className={use24Hour ? 'is-active' : ''}
-                onClick={() => setUse24Hour(true)}
-                aria-pressed={use24Hour}
-              >
-                24h
-              </button>
-            </div>
-          </div>
-          <div className="color-controls">
-            <label className="color-label" htmlFor="accent-color">
-              Accent
-            </label>
-            <div className="color-picker">
-              <input
-                id="accent-color"
-                type="color"
-                value={accentColor}
-                onChange={(event) => setAccentColor(event.target.value)}
-                aria-label="Choose accent color"
-              />
-              <span className="color-value">{accentColor.toUpperCase()}</span>
-            </div>
-            <div className="color-presets" role="group" aria-label="Preset accents">
-              {ACCENT_PRESETS.map((preset) => {
-                const isActive =
-                  preset.value.toLowerCase() === accentColor.toLowerCase()
-                return (
-                  <button
-                    key={preset.value}
-                    type="button"
-                    className={`color-swatch${isActive ? ' is-active' : ''}`}
-                    style={{ backgroundColor: preset.value }}
-                    onClick={() => setAccentColor(preset.value)}
-                    title={preset.label}
-                    aria-label={preset.label}
-                  />
-                )
-              })}
-            </div>
-          </div>
+        <div className="calendar-grid">
+          {TIME_ZONES.map((zone) => {
+            const { month, year, day, weekday } = getCalendarParts(
+              currentTime,
+              zone.id
+            )
+            const time = getTimeString(currentTime, zone.id, use24Hour)
+            return (
+              <div key={zone.id} className="calendar-card">
+                <div className="calendar-header">
+                  <div className="calendar-month">{month}</div>
+                  <div className="calendar-year">{year}</div>
+                </div>
+                <div className="calendar-day">{day}</div>
+                <div className="calendar-weekday">{weekday}</div>
+                <div className="calendar-time">{time}</div>
+                <div className="calendar-location">{zone.label}</div>
+              </div>
+            )
+          })}
         </div>
         <div className="clock-subtitle">Made with React</div>
       </div>
