@@ -196,6 +196,7 @@ function App() {
   )
   const [hexInput, setHexInput] = useState(DEFAULT_ACCENT)
   const [use24Hour, setUse24Hour] = useState(false)
+  const [isPickerOpen, setIsPickerOpen] = useState(false)
 
   // Update time every second
   useEffect(() => {
@@ -206,6 +207,17 @@ function App() {
     // Cleanup interval on unmount
     return () => clearInterval(timer)
   }, [])
+
+  useEffect(() => {
+    if (!isPickerOpen) return
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsPickerOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isPickerOpen])
 
   const updateAccentFromHsv = (next) => {
     const nextRgb = hsvToRgb(next)
@@ -316,9 +328,73 @@ function App() {
               </div>
             </div>
             <div className="color-controls">
-              <label className="color-label" htmlFor="hex-input">
-                Accent
-              </label>
+              <span className="color-label">Accent</span>
+              <button
+                type="button"
+                className="accent-button"
+                onClick={() => setIsPickerOpen(true)}
+              >
+                <span
+                  className="accent-dot"
+                  style={{ backgroundColor: accentColor }}
+                />
+                <span className="accent-text">Customize</span>
+                <span className="accent-value">{accentColor}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="calendar-grid">
+          {TIME_ZONES.map((zone) => {
+            const { month, year, day, weekday } = getCalendarParts(
+              currentTime,
+              zone.id
+            )
+            const time = getTimeString(currentTime, zone.id, use24Hour)
+            return (
+              <div key={zone.id} className="calendar-card">
+                <div className="calendar-header">
+                  <div className="calendar-location">{zone.label}</div>
+                </div>
+                <div className="calendar-day">{day}</div>
+                <div className="calendar-date">
+                  {weekday}, {month} {year}
+                </div>
+                <div className="calendar-time">{time}</div>
+              </div>
+            )
+          })}
+        </div>
+        <div className="clock-subtitle">Made with React</div>
+      </div>
+      {isPickerOpen ? (
+        <div
+          className="modal-backdrop"
+          onClick={() => setIsPickerOpen(false)}
+        >
+          <div
+            className="modal-card color-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Accent color picker"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="modal-header">
+              <div>
+                <div className="modal-title">Accent color</div>
+                <div className="modal-subtitle">
+                  Pick a new tint for the interface.
+                </div>
+              </div>
+              <button
+                type="button"
+                className="modal-close"
+                onClick={() => setIsPickerOpen(false)}
+              >
+                Close
+              </button>
+            </div>
+            <div className="modal-body">
               <div className="color-picker">
                 <div
                   className="sv-picker"
@@ -387,32 +463,17 @@ function App() {
                   )
                 })}
               </div>
+              <button
+                type="button"
+                className="modal-done"
+                onClick={() => setIsPickerOpen(false)}
+              >
+                Done
+              </button>
             </div>
           </div>
         </div>
-        <div className="calendar-grid">
-          {TIME_ZONES.map((zone) => {
-            const { month, year, day, weekday } = getCalendarParts(
-              currentTime,
-              zone.id
-            )
-            const time = getTimeString(currentTime, zone.id, use24Hour)
-            return (
-              <div key={zone.id} className="calendar-card">
-                <div className="calendar-header">
-                  <div className="calendar-month">{month}</div>
-                  <div className="calendar-year">{year}</div>
-                </div>
-                <div className="calendar-day">{day}</div>
-                <div className="calendar-weekday">{weekday}</div>
-                <div className="calendar-time">{time}</div>
-                <div className="calendar-location">{zone.label}</div>
-              </div>
-            )
-          })}
-        </div>
-        <div className="clock-subtitle">Made with React</div>
-      </div>
+      ) : null}
     </div>
   )
 }

@@ -96,22 +96,8 @@
 .calendar-header {
   background: var(--accent-soft);
   border-bottom: 1px solid var(--accent-border);
-  padding: 20px 24px 18px;
+  padding: 16px 18px;
   border-radius: 24px 24px 0 0;
-}
-
-.calendar-month {
-  font-size: 1.2em;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  color: #2b2f38;
-  text-transform: uppercase;
-}
-
-.calendar-year {
-  font-size: 0.95em;
-  color: #6b7687;
-  margin-top: 6px;
 }
 
 .calendar-day {
@@ -119,13 +105,6 @@
   font-weight: 700;
   color: #2b2f38;
   margin: 26px 0 10px;
-}
-
-.calendar-weekday {
-  font-size: 0.95em;
-  color: #6b7687;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
 }
 
 .calendar-time {
@@ -184,18 +163,6 @@
 .color-label {
   font-weight: 500;
   letter-spacing: 0.4px;
-}
-
-.color-picker {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: min(260px, 70vw);
-}
-
-.color-value {
-  font-size: 0.85em;
-  letter-spacing: 0.8px;
 }
 
 .sv-picker {
@@ -310,34 +277,18 @@
   color: #2b2f38;
 }
 
-.color-presets {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
-}
-
-.color-swatch {
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  border: 1px solid #cbd3df;
-  cursor: pointer;
-  padding: 0;
-  background: #ffffff;
-}
-
-.color-swatch.is-active {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-  border-color: transparent;
-}
-
 .calendar-location {
-  font-size: 0.85em;
+  font-size: 0.95em;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: #2b2f38;
+  text-transform: uppercase;
+}
+
+.calendar-date {
+  font-size: 0.95em;
   color: #6b7687;
   letter-spacing: 0.4px;
-  margin-bottom: 6px;
 }
 
 /* Subtitle styling */
@@ -366,4 +317,139 @@
   .local-summary {
     width: 100%;
   }
+}
+
+.accent-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 999px;
+  border: 1px solid #d6dce7;
+  background: #ffffff;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.accent-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.accent-text {
+  font-size: 0.9em;
+  color: #2b2f38;
+  font-weight: 600;
+}
+
+.accent-value {
+  font-size: 0.85em;
+  letter-spacing: 0.7px;
+  color: #6b7687;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 23, 34, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 10;
+}
+
+.modal-card {
+  width: min(520px, 100%);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(15, 20, 30, 0.18);
+  border: 1px solid #e5e9f2;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid #e5e9f2;
+}
+
+.modal-title {
+  font-size: 1.05em;
+  font-weight: 600;
+  color: #1f2530;
+}
+
+.modal-subtitle {
+  font-size: 0.85em;
+  color: #6b7687;
+  margin-top: 4px;
+}
+
+.modal-close {
+  border: none;
+  background: #f4f6fb;
+  color: #3b4558;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 20px 22px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.color-modal .color-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.color-value {
+  font-size: 0.85em;
+  letter-spacing: 0.8px;
+}
+
+.color-presets {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
+
+.color-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 1px solid #cbd3df;
+  cursor: pointer;
+  padding: 0;
+  background: #ffffff;
+}
+
+.color-swatch.is-active {
+  outline: 2px solid var(--accent-color);
+  outline-offset: 2px;
+  border-color: transparent;
+}
+
+.modal-done {
+  border: none;
+  background: var(--accent-color);
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 0.95em;
+  cursor: pointer;
 }
