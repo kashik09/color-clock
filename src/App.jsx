@@ -77,13 +77,13 @@ const getCalendarParts = (date, timeZone) => {
   }
 }
 
-const getTimeString = (date, timeZone) =>
+const getTimeString = (date, timeZone, use24Hour) =>
   new Intl.DateTimeFormat('en-US', {
     timeZone,
-    hour: 'numeric',
+    hour: use24Hour ? '2-digit' : 'numeric',
     minute: '2-digit',
     second: '2-digit',
-    hour12: true,
+    hour12: !use24Hour,
   }).format(date)
 
 function App() {
@@ -91,6 +91,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState(new Date())
   const [accentColor, setAccentColor] = useState('#5b7c99')
   const [selectedZone, setSelectedZone] = useState(TIME_ZONES[0].id)
+  const [use24Hour, setUse24Hour] = useState(false)
 
   // Update time every second
   useEffect(() => {
@@ -106,7 +107,7 @@ function App() {
     currentTime,
     selectedZone
   )
-  const time = getTimeString(currentTime, selectedZone)
+  const time = getTimeString(currentTime, selectedZone, use24Hour)
 
   return (
     <div className="clock-container" style={buildAccentStyles(accentColor)}>
@@ -134,6 +135,27 @@ function App() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="format-controls">
+            <span className="format-label">Time format</span>
+            <div className="format-toggle" role="group" aria-label="Time format">
+              <button
+                type="button"
+                className={!use24Hour ? 'is-active' : ''}
+                onClick={() => setUse24Hour(false)}
+                aria-pressed={!use24Hour}
+              >
+                12h
+              </button>
+              <button
+                type="button"
+                className={use24Hour ? 'is-active' : ''}
+                onClick={() => setUse24Hour(true)}
+                aria-pressed={use24Hour}
+              >
+                24h
+              </button>
+            </div>
           </div>
           <div className="color-controls">
             <label className="color-label" htmlFor="accent-color">
