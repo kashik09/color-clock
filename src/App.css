@@ -48,11 +48,9 @@
 .calendar-grid {
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(5, minmax(220px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 20px;
   align-items: stretch;
-  overflow-x: auto;
-  padding-bottom: 8px;
 }
 
 /* Clock card with glass effect */
@@ -63,7 +61,7 @@
   box-shadow: 0 12px 30px rgba(40, 56, 82, 0.12);
   border: 1px solid #e7ebf2;
   text-align: center;
-  width: min(280px, 100%);
+  width: 100%;
 }
 
 .calendar-header {
