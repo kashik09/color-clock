@@ -46,6 +46,72 @@ const rgbToHex = (rgb) => {
   return `#${toHex(rgb.r)}${toHex(rgb.g)}${toHex(rgb.b)}`.toUpperCase()
 }
 
+const rgbToHsl = (rgb) => {
+  const r = rgb.r / 255
+  const g = rgb.g / 255
+  const b = rgb.b / 255
+  const max = Math.max(r, g, b)
+  const min = Math.min(r, g, b)
+  const delta = max - min
+  const lightness = (max + min) / 2
+
+  let hue = 0
+  let saturation = 0
+
+  if (delta !== 0) {
+    saturation =
+      lightness > 0.5 ? delta / (2 - max - min) : delta / (max + min)
+    if (max === r) {
+      hue = ((g - b) / delta) % 6
+    } else if (max === g) {
+      hue = (b - r) / delta + 2
+    } else {
+      hue = (r - g) / delta + 4
+    }
+    hue *= 60
+    if (hue < 0) hue += 360
+  }
+
+  return {
+    h: Math.round(hue),
+    s: Math.round(saturation * 100),
+    l: Math.round(lightness * 100),
+  }
+}
+
+const hslToRgb = (hsl) => {
+  const h = hsl.h / 360
+  const s = hsl.s / 100
+  const l = hsl.l / 100
+
+  if (s === 0) {
+    const gray = Math.round(l * 255)
+    return { r: gray, g: gray, b: gray }
+  }
+
+  const hueToRgb = (p, q, t) => {
+    let temp = t
+    if (temp < 0) temp += 1
+    if (temp > 1) temp -= 1
+    if (temp < 1 / 6) return p + (q - p) * 6 * temp
+    if (temp < 1 / 2) return q
+    if (temp < 2 / 3) return p + (q - p) * (2 / 3 - temp) * 6
+    return p
+  }
+
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+  const p = 2 * l - q
+  const r = hueToRgb(p, q, h + 1 / 3)
+  const g = hueToRgb(p, q, h)
+  const b = hueToRgb(p, q, h - 1 / 3)
+
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255),
+  }
+}
+
 const rgbToHsv = (rgb) => {
   const r = rgb.r / 255
   const g = rgb.g / 255
@@ -295,6 +361,14 @@ function App() {
     }
   }
 
+  const updateAccentFromHsl = (next) => {
+    const nextRgb = hslToRgb(next)
+    const nextHex = rgbToHex(nextRgb)
+    setAccentColor(nextHex)
+    setHexInput(nextHex)
+    setPicker(rgbToHsv(nextRgb))
+  }
+
   const openPicker = () => {
     setModalOffset({ x: 0, y: 0 })
     setIsPickerOpen(true)
@@ -347,6 +421,8 @@ function App() {
 
   const localParts = getCalendarParts(currentTime)
   const localTime = getTimeString(currentTime, null, use24Hour)
+  const currentRgb = hexToRgb(accentColor) || hexToRgb(DEFAULT_ACCENT)
+  const currentHsl = rgbToHsl(currentRgb)
 
   return (
     <div className="clock-container" style={buildAccentStyles(accentColor)}>
@@ -507,6 +583,59 @@ function App() {
                     onKeyDown={handleHexInputKeyDown}
                     placeholder="#5B7C99"
                   />
+                </div>
+                <div className="hsl-controls" aria-label="HSL controls">
+                  <div className="hsl-row">
+                    <label htmlFor="hsl-h">Hue</label>
+                    <input
+                      id="hsl-h"
+                      type="range"
+                      min="0"
+                      max="360"
+                      value={currentHsl.h}
+                      onChange={(event) =>
+                        updateAccentFromHsl({
+                          ...currentHsl,
+                          h: Number(event.target.value),
+                        })
+                      }
+                    />
+                    <span className="hsl-value">{currentHsl.h}°</span>
+                  </div>
+                  <div className="hsl-row">
+                    <label htmlFor="hsl-s">Sat</label>
+                    <input
+                      id="hsl-s"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={currentHsl.s}
+                      onChange={(event) =>
+                        updateAccentFromHsl({
+                          ...currentHsl,
+                          s: Number(event.target.value),
+                        })
+                      }
+                    />
+                    <span className="hsl-value">{currentHsl.s}%</span>
+                  </div>
+                  <div className="hsl-row">
+                    <label htmlFor="hsl-l">Light</label>
+                    <input
+                      id="hsl-l"
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={currentHsl.l}
+                      onChange={(event) =>
+                        updateAccentFromHsl({
+                          ...currentHsl,
+                          l: Number(event.target.value),
+                        })
+                      }
+                    />
+                    <span className="hsl-value">{currentHsl.l}%</span>
+                  </div>
                 </div>
               </div>
               <div
