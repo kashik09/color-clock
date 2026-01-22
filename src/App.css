@@ -421,10 +421,28 @@
 }
 
 .color-presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 12px 10px;
+  width: 100%;
+}
+
+.color-swatch-item {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 6px 4px;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.color-swatch-item.is-active {
+  border-color: var(--accent-color);
+  background: var(--accent-soft);
 }
 
 .color-swatch {
@@ -432,15 +450,14 @@
   height: 22px;
   border-radius: 999px;
   border: 1px solid #cbd3df;
-  cursor: pointer;
-  padding: 0;
   background: #ffffff;
 }
 
-.color-swatch.is-active {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
-  border-color: transparent;
+.color-swatch-label {
+  font-size: 0.78em;
+  letter-spacing: 0.5px;
+  color: #6b7687;
+}
 }
 
 .modal-done {

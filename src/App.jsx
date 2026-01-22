@@ -454,12 +454,19 @@ function App() {
                     <button
                       key={preset.value}
                       type="button"
-                      className={`color-swatch${isActive ? ' is-active' : ''}`}
-                      style={{ backgroundColor: preset.value }}
+                      className={`color-swatch-item${
+                        isActive ? ' is-active' : ''
+                      }`}
                       onClick={() => setAccentFromHex(preset.value)}
-                      title={preset.label}
-                      aria-label={preset.label}
-                    />
+                      aria-pressed={isActive}
+                    >
+                      <span
+                        className="color-swatch"
+                        style={{ backgroundColor: preset.value }}
+                        aria-hidden="true"
+                      />
+                      <span className="color-swatch-label">{preset.label}</span>
+                    </button>
                   )
                 })}
               </div>
