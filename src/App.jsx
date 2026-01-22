@@ -413,6 +413,7 @@ function App() {
             return (
               <div key={zone.id} className="calendar-card">
                 <div className="calendar-header">
+                  <div className="calendar-month">{month}</div>
                   <div className="calendar-location">{zone.label}</div>
                 </div>
                 <div className="calendar-day">{day}</div>
