@@ -9,6 +9,14 @@ const TIME_ZONES = [
   { id: 'Africa/Nairobi', label: 'Kenya (Nairobi)' },
 ]
 
+const ACCENT_PRESETS = [
+  { value: '#5b7c99', label: 'Slate' },
+  { value: '#a06a4f', label: 'Clay' },
+  { value: '#4c8a78', label: 'Teal' },
+  { value: '#8a7b5f', label: 'Sand' },
+  { value: '#c06b6b', label: 'Rosewood' },
+]
+
 const hexToRgb = (hex) => {
   const cleaned = hex.replace('#', '').trim()
   if (cleaned.length === 3) {
@@ -29,13 +37,25 @@ const hexToRgb = (hex) => {
   }
 }
 
+const mixRgb = (base, target, weight) => ({
+  r: Math.round(base.r + (target.r - base.r) * weight),
+  g: Math.round(base.g + (target.g - base.g) * weight),
+  b: Math.round(base.b + (target.b - base.b) * weight),
+})
+
+const toCssRgb = (rgb) => `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
+
 const buildAccentStyles = (hex) => {
-  const fallback = { r: 59, g: 75, b: 97 }
+  const fallback = { r: 91, g: 124, b: 153 }
   const rgb = hexToRgb(hex) || fallback
+  const bgStart = mixRgb(rgb, { r: 255, g: 255, b: 255 }, 0.86)
+  const bgEnd = mixRgb(rgb, { r: 226, g: 231, b: 240 }, 0.78)
   return {
-    '--accent-color': `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+    '--accent-color': toCssRgb(rgb),
     '--accent-soft': `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)`,
     '--accent-border': `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.22)`,
+    '--bg-start': toCssRgb(bgStart),
+    '--bg-end': toCssRgb(bgEnd),
   }
 }
 
@@ -89,8 +109,8 @@ function App() {
   const time = getTimeString(currentTime, selectedZone)
 
   return (
-    <div className="clock-container">
-      <div className="calendar-card" style={buildAccentStyles(accentColor)}>
+    <div className="clock-container" style={buildAccentStyles(accentColor)}>
+      <div className="calendar-card">
         <div className="calendar-header">
           <div className="calendar-month">{month}</div>
           <div className="calendar-year">{year}</div>
@@ -119,14 +139,33 @@ function App() {
             <label className="color-label" htmlFor="accent-color">
               Accent
             </label>
-            <input
-              id="accent-color"
-              type="color"
-              value={accentColor}
-              onChange={(event) => setAccentColor(event.target.value)}
-              aria-label="Choose accent color"
-            />
-            <span className="color-value">{accentColor.toUpperCase()}</span>
+            <div className="color-picker">
+              <input
+                id="accent-color"
+                type="color"
+                value={accentColor}
+                onChange={(event) => setAccentColor(event.target.value)}
+                aria-label="Choose accent color"
+              />
+              <span className="color-value">{accentColor.toUpperCase()}</span>
+            </div>
+            <div className="color-presets" role="group" aria-label="Preset accents">
+              {ACCENT_PRESETS.map((preset) => {
+                const isActive =
+                  preset.value.toLowerCase() === accentColor.toLowerCase()
+                return (
+                  <button
+                    key={preset.value}
+                    type="button"
+                    className={`color-swatch${isActive ? ' is-active' : ''}`}
+                    style={{ backgroundColor: preset.value }}
+                    onClick={() => setAccentColor(preset.value)}
+                    title={preset.label}
+                    aria-label={preset.label}
+                  />
+                )
+              })}
+            </div>
           </div>
         </div>
         <div className="clock-subtitle">Made with React</div>
