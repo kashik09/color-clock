@@ -11,83 +11,148 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  animation: gradientShift 10s ease infinite;
-  background-size: 400% 400%;
-}
-
-/* Animated gradient background */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  background: linear-gradient(160deg, #f6f8fb 0%, #e9edf5 100%);
+  font-family: 'Ubuntu', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Clock card with glass effect */
-.clock-card {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
-  border-radius: 30px;
-  padding: 60px 80px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 255, 255, 0.2);
+.calendar-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 0 0 32px;
+  box-shadow: 0 12px 30px rgba(40, 56, 82, 0.12);
+  border: 1px solid #e7ebf2;
   text-align: center;
-  animation: float 3s ease-in-out infinite;
+  width: min(360px, 90vw);
 }
 
-/* Floating animation */
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+.calendar-header {
+  background: var(--accent-soft);
+  border-bottom: 1px solid var(--accent-border);
+  padding: 20px 24px 18px;
+  border-radius: 24px 24px 0 0;
 }
 
-/* Title styling */
-.clock-title {
-  font-size: 3em;
-  color: #ffffff;
-  margin-bottom: 30px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  letter-spacing: 2px;
+.calendar-month {
+  font-size: 1.2em;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #2b2f38;
+  text-transform: uppercase;
 }
 
-/* Time display with neon glow */
-.clock-time {
-  font-size: 2em;
-  color: #ffd700;
-  font-weight: bold;
-  margin-bottom: 20px;
-  text-shadow: 
-    0 0 10px #ffd700,
-    0 0 20px #ffd700,
-    0 0 30px #ff6b6b;
-  animation: pulse 2s ease-in-out infinite;
+.calendar-year {
+  font-size: 0.95em;
+  color: #6b7687;
+  margin-top: 6px;
 }
 
-/* Pulse animation for time */
-@keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+.calendar-day {
+  font-size: 4em;
+  font-weight: 700;
+  color: #2b2f38;
+  margin: 26px 0 10px;
+}
+
+.calendar-weekday {
+  font-size: 0.95em;
+  color: #6b7687;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+
+.calendar-time {
+  font-size: 1.4em;
+  color: var(--accent-color);
+  font-weight: 500;
+  margin: 16px 0 22px;
+}
+
+.calendar-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 0 24px;
+  margin-bottom: 18px;
+}
+
+.timezone-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95em;
+  color: #6b7687;
+}
+
+.timezone-label {
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+.timezone-controls select {
+  width: min(240px, 70vw);
+  padding: 6px 10px;
+  border: 1px solid #d6dce7;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #2b2f38;
+  font-family: inherit;
+  font-size: 0.95em;
+  cursor: pointer;
+}
+
+.color-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95em;
+  color: #6b7687;
+}
+
+.color-label {
+  font-weight: 500;
+  letter-spacing: 0.4px;
+}
+
+.color-controls input[type="color"] {
+  width: 38px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #d6dce7;
+  border-radius: 8px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.color-controls input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.color-controls input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+.color-value {
+  font-size: 0.85em;
+  letter-spacing: 0.8px;
 }
 
 /* Subtitle styling */
 .clock-subtitle {
-  font-size: 1.2em;
-  color: #e0e0e0;
+  font-size: 0.85em;
+  color: #6b7687;
   font-style: italic;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .clock-card {
-    padding: 40px 30px;
+  .calendar-card {
+    padding: 0 0 28px;
   }
-  
-  .clock-title {
-    font-size: 2em;
-  }
-  
-  .clock-time {
-    font-size: 1.5em;
+
+  .calendar-day {
+    font-size: 3.4em;
   }
 }
